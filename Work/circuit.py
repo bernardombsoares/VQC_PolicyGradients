@@ -1,5 +1,6 @@
 import pennylane as qml
 import numpy as np
+import torch
 from torch.nn.parameter import Parameter
 
 def create_zz_operator(n_qubits):
