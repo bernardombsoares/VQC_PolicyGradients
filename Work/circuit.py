@@ -1,75 +1,92 @@
 import pennylane as qml
 import numpy as np
 import torch
+import torch.nn as nn
 from torch.nn.parameter import Parameter
 
-def create_zz_operator(n_qubits):
-    ZZ = qml.PauliZ(0)
-    for i in range(1, n_qubits):
-        ZZ = qml.operation.Tensor(ZZ, qml.PauliZ(i))
-    return ZZ
+from utils import measure_selection
 
-class CircuitGenerator:
+def jerbi_model(n_qubits, n_layers, weight_init, measure_type, observables):
 
-    def __init__(self, n_qubits, n_layers, shots):
-        self.n_qubits = n_qubits
-        self.n_layers = n_layers
-        self.shots = shots
+    dev = qml.device("default.qubit", wires=n_qubits)
+
+    observables = observables if observables is not None else None
+    
+    weight_shapes = {"params": (n_layers + 1, n_qubits, 2)}
+    init_method   = {"params": weight_init}
+
+    @qml.qnode(dev, interface='torch')
+    def qnode(inputs, params):
+        qml.broadcast(qml.Hadamard, wires=range(n_qubits), pattern="single")
+        for layer in range(n_layers):
+            for wire in range(n_qubits):
+                qml.RZ(params[layer][wire][0], wires=wire)
+                qml.RY(params[layer][wire][1], wires=wire)
+
+            qml.broadcast(qml.CNOT, wires=range(n_qubits), pattern="chain")
+            for wire in range(n_qubits):
+                qml.RY(inputs[wire], wires=wire)
+                qml.RZ(inputs[wire], wires=wire)
+
+        for wire in range(n_qubits):
+            qml.RZ(params[-1][wire][0], wires=wire)
+            qml.RY(params[-1][wire][1], wires=wire)
+    
+        return measure_selection(n_qubits, measure_type, observables)
+
+    model = qml.qnn.TorchLayer(qnode, weight_shapes=weight_shapes, init_method=init_method)
+
+    return model
 
 
-    def jerbi(self, init_params, params, measure_type = 'probs', observables = None):
 
-        dev = qml.device('default.qubit', wires=self.n_qubits, shots=None, analytic=False)
-        weight_shapes = {
-                            "init_params": (self.n_layers, 2, self.n_qubits),
-                            "params": (self.n_layers + 1, 2, self.n_qubits)
-                        }
+####################################################################################################
 
-        init_method = {
-                            "init_params": torch.nn.init.normal_,
-                            "params": torch.nn.init.uniform,
-                        }
+class CircuitGenerator(nn.Module):
 
-        '''
-        measure_type should be either 'probs' (probability of each bitstring) or 'expval' (expectation value )
-        params should have shape=(n_layers + 1, 2, n_qubits)
-        init_params should have shape=(n_layers, 2, n_qubits)
-        '''
+    def __init__(self, 
+                 n_qubits, 
+                 n_layers,  
+                 shots, 
+                 weight_init=torch.nn.init.uniform_, 
+                 input_init = torch.nn.init.ones_, 
+                 measure_type = 'probs', 
+                 observables = None):
+        super(CircuitGenerator, self).__init__()
+        self.n_qubits = n_qubits                        #number of qubits
+        self.n_layers = n_layers                        #number of layers
+        self.shots = shots                              #number of shots
+        self.measure_type = measure_type                #measure type - 'probs' or 'expval'
+        self.observables = observables                  #observables if the used wants
+        self.weight_init = weight_init                  #weight initialization method
+        self.input_init = input_init                    #input weight initialization method
 
-        if measure_type != 'probs' or measure_type != 'expval':
-            return 'Error: provided measure_type is not valid.'
+
+
+    def jerbi_model(self, input_scaling = False):
         
-        qml.broadcast(qml.Hadamard, wires=range(self.n_qubits), pattern="single")
-        for i in range(self.n_layers):
-            qml.broadcast(qml.RZ, wires=range(self.n_qubits), pattern="single", parameters=params[i][0])
-            qml.broadcast(qml.RY, wires=range(self.n_qubits), pattern="single", parameters=params[i][1])
-
-            qml.broadcast(qml.CNOT, wires=range(self.n_qubits), pattern="chain")
-
-            qml.broadcast(qml.RY, wires=range(self.n_qubits), pattern="single", parameters=init_params[i][0])
-            qml.broadcast(qml.RZ, wires=range(self.n_qubits), pattern="single", parameters=init_params[i][1])
-
-        qml.broadcast(qml.RZ, wires=range(self.n_qubits), pattern="single", parameters=params[self.n_layers][0])
-        qml.broadcast(qml.RY, wires=range(self.n_qubits), pattern="single", parameters=params[self.n_layers][1])
+        if input_scaling:
+            self.input_params = Parameter(torch.empty(self.n_layers, self.n_qubits, 2))
+            self.input_init(self.input_params)
+        else:
+            self.input_params = None
+            
+        self.q_layers = jerbi_model(n_qubits=self.n_qubits,
+                                    n_layers=self.n_layers,
+                                    weight_init = self.weight_init,
+                                    measure_type=self.measure_type,
+                                    observables=self.observables)
         
-        if measure_type == 'probs':
-            if observables == None:
-                qcircuit = qml.probs(wires=self.n_qubits)
-            else:
-                qcircuit = qml.probs(op=observables)
+        return self.q_layers
 
-        elif measure_type == 'expval':
-            if observables == None:
-                observables = create_zz_operator(self.n_qubits)
-                qcircuit = qml.expval(op=observables)
-            else:
-                qcircuit = qml.expval(op=observables)
+    def jerbi_input(self,inputs):
 
-        circuit = qml.QNode(qcircuit, dev, interface="torch", diff_method="backprop")
-        model = qml.qnn.TorchLayer(circuit, weight_shapes=weight_shapes, init_method=init_method)
+        if self.input_params is not None:
+            inputs = inputs * self.input_params
 
-        return model
+        outputs = self.q_layers(inputs)
 
+        return outputs
 
 
     
