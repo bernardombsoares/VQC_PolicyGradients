@@ -1,0 +1,17 @@
+{
+    "Number of Qubits": 4,
+    "Number of Layers": 8,
+    "Shots": null,
+    "Input Scaling": true,
+    "Data Re-uploading": true,
+    "Design": "jerbi_circuit",
+    "Differentiation Method": "backprop",
+    "Weight Initiation": "<function uniform_ at 0x000002913164B880>",
+    "Input_init": "<function ones_ at 0x000002913164BBA0>",
+    "Measure": "<function measure_probs_basic at 0x0000029139A41440>",
+    "Measure Qubits": 4,
+    "Policy Type": "raw_contiguous",
+    "Optimizers": "Adam (\nParameter Group 0\n    amsgrad: False\n    betas: (0.9, 0.999)\n    capturable: False\n    differentiable: False\n    eps: 1e-08\n    foreach: None\n    fused: None\n    lr: 0.01\n    maximize: False\n    weight_decay: 0\n\nParameter Group 1\n    amsgrad: False\n    betas: (0.9, 0.999)\n    capturable: False\n    differentiable: False\n    eps: 1e-08\n    foreach: None\n    fused: None\n    lr: 0.1\n    maximize: False\n    weight_decay: 0\n)",
+    "Envinronment Name": "CartPole-v1",
+    "Gamma (discounting factor)": 1
+}
