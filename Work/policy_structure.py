@@ -22,7 +22,7 @@ class PolicyType(nn.Module):
         return policy
 
     def raw_contiguous(self,probs):
-
+        
         probs_flatten = probs.flatten()
         chunk_size = len(probs_flatten) // self.n_actions
         remainder = len(probs_flatten) % self.n_actions
@@ -41,7 +41,7 @@ class PolicyType(nn.Module):
 
         policy_tensor = torch.stack(policy)
         return policy_tensor
-    
+        
     def raw_parity(self,probs):
 
         if self.n_actions % 2 != 0:
@@ -56,9 +56,7 @@ class PolicyType(nn.Module):
             if counter == self.n_actions:
                 counter = 0
         
-        policy_tensor = torch.stack(policy)
-
-        return policy_tensor
+        return policy
     
     def softmax(self, probs):
         if len(probs) == self.n_actions:
