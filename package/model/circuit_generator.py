@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from pqc.pqc_circuit import *
+from package.pqc.vqc_designs import *
 from pqc.measures import measure_probs
 from pqc.pqc_operations import *
 
