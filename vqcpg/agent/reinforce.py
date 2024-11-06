@@ -100,6 +100,8 @@ class ReinforceAgent:
             if i % self.print_every == 0 and i > 1:
                 print('Last {} Episodes average reward: {:.2f}\t'.format(len(self.scores), np.mean(self.scores)))
 
+        # Save the final weights
+        self.save_final_weights()
 
         # Close TensorBoard session
         if tensorboard:
@@ -267,40 +269,57 @@ class ReinforceAgent:
             old_episode_reward = data['episode_reward'].tolist()
             old_loss = data['loss'].tolist()
             old_runtime = data['runtime'].tolist()
-            old_params_gradients = data['params_gradients'].tolist()
+            old_gradients = data['gradients'].tolist()
+            old_params = data['params'].tolist()
         else:
             old_episode_reward = []
             old_loss = []
             old_runtime = []
-            old_params_gradients = []
+            old_gradients = []
+            old_params = []
 
         # Add episode reward and runtime
         old_episode_reward.append(self.scores[-1])
         old_runtime.append(self.runtime)
 
-
         # Stores the loss and parameter gradients when batch is full
         current_episode_gradients = []
+        current_episode_params = []
         if iteration % self.batch_size == 0 and iteration > 1 and self.solved is False:
             old_loss.append(self.loss.item())
-            for name, param in self.policy.named_parameters():
+            for name, param in self.policy.circuit.named_parameters():
+                # Get the parameter values and flatten them
+                param_array = param.cpu().detach().numpy().flatten()
+                
+                # Append the parameter values to the old_parameters list
+                current_episode_params.append(param_array)
+
+                # If the parameter has a gradient, get and flatten it
                 if param.grad is not None:
                     grad_array = param.grad.cpu().numpy().flatten()
                     current_episode_gradients.append(grad_array)
-            old_params_gradients.append(current_episode_gradients)
+
+            # Concatenate the parameters and gradients into a single array for each episode
+            flattened_parameters = np.concatenate(current_episode_params)
+            flattened_gradients = np.concatenate(current_episode_gradients)
+
+            old_params.append(flattened_parameters)
+            old_gradients.append(flattened_gradients)
             
         # Save data to .npz file
         np.savez_compressed(data_file,
                             episode_reward=np.array(old_episode_reward),
                             loss=np.array(old_loss),
                             runtime=np.array(old_runtime),
-                            params_gradients=np.array(old_params_gradients, dtype=object))
+                            gradients=np.array(old_gradients, dtype=object),
+                            params=np.array(old_params,dtype=object))
 
         # Clear old data lists to free up memory
         del old_episode_reward[:]
         del old_loss[:]
         del old_runtime[:]
-        del old_params_gradients[:]
+        del old_gradients[:]
+        del old_params[:]
 
     def save_final_weights(self, run_path):
         '''
