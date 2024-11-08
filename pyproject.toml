@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "vqc-policygradient"
 version = "1.0.0"
-description = "A robust Python package to analyze VQC-based policy gradient-based models."
+description = "A Python library for the analysis of VQC-based policy gradient-based models."
 authors = ["Bernardo Soares <soaresberna@gmail.com>"]
 license = "MIT"
 readme = "README.md"
