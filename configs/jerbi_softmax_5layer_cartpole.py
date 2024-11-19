@@ -54,6 +54,5 @@ normalize = True
 print_every = 100
 verbose = 1
 
-current_dir = os.getcwd()
-two_levels_up = os.path.abspath(os.path.join(current_dir, "../../"))
+data_path = os.path.abspath(os.path.join(os.getcwd(), "../../"))
 tensorboard = True
