@@ -53,7 +53,7 @@ def train_agents(script_module_name, agent_index, rundate):
 
     # Train the agent
     file_name = f"{script.file_name}_agent_{agent_index}"
-    reinforce_update.train(file_name, rundate, script.two_levels_up, script.tensorboard)
+    reinforce_update.train(file_name, rundate, script.data_path, script.tensorboard)
     
     return f"Agent {agent_index} completed training with success status: {reinforce_update.solved}"
 
