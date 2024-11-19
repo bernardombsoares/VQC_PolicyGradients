@@ -17,8 +17,7 @@ This package is designed to integrate quantum computing with reinforcement learn
 
 1. **Integrated Quantum Circuit Architectures**: Implements the circuits in [Jerbi et al. (2021)](https://arxiv.org/abs/2103.05577), [TensorFlow Quantum tutorial (Broughton et al., 2021)](https://www.tensorflow.org/quantum/tutorials), and [Universal Quantum Classifier (Pérez-Salinas et al., 2020)](https://arxiv.org/abs/1906.10594) adapted to RL.
 2. **Policy Options**: Different policy post-processing strategies, including the Born policies developed in [Jerbi et al. (2021)](https://arxiv.org/abs/2103.05577) and [Meyer et al. (2023)](https://arxiv.org/abs/2305.07919), as well as the Softmax policy, which can implement beta scheduling to adjust the agents' greediness.
-3. **Extensible Configurations**: Big flexibility of parameters, allowing the use of input and output scaling, different entangling pat-
-terns, full liberty of the observables used, and more.
+3. **Extensible Configurations**: Big flexibility of parameters, allowing the use of input and output scaling, different entangling patterns, full liberty of the observables used, and more.
 4. **Parallel Execution**: Train multiple agents concurrently using CLI arguments.
 5. **Experimentation Framework**: Allows benchmark environments from OpenAI, such as **CartPole-v1** and **Acrobot-v1**.
 
@@ -32,22 +31,15 @@ terns, full liberty of the observables used, and more.
 
 ## Installation
 
-This package uses `poetry` for dependency management. Ensure you have `poetry` installed. Then, follow these steps:
-
 1. Clone the repository:
    ```bash
-   git clone https://github.com/bernardombsoares/vqc_policygradients.git
+   git clone https://github.com/yourusername/quantum-policy-gradients.git
    cd quantum-policy-gradients
    ```
 2. Install dependencies:
    ```bash
-   poetry install
+   pip install -r requirements.txt
    ```
-
-To activate the virtual environment:
-```bash
-poetry shell
-```
 
 ---
 
@@ -60,9 +52,9 @@ poetry shell
      - Path to a configuration file.
      - Number of agents to train in parallel.
        
-   ```bash
-   python main.py <config_path> <num_agents>
-   ```
+```bash
+python main.py <config_path> <num_agents>
+```
 
 We provide several configuration files in `configs/`. Users can also create custom configurations for experiments and load them via CLI.
 
@@ -90,12 +82,14 @@ We provide several configuration files in `configs/`. Users can also create cust
 ## Contact
 
 For questions or feedback, contact the author at:
-- **Email**: soaresberna@gmail.com
+- **Email**: soaresberna[at]gmail[dot]com
 
 ---
 
 ## License
 
-Refer to the [MIT License](LICENSE.md) for terms of use. Please credit this work when utilizing or modifying the library.
+This project is licensed under the [MIT License](LICENSE.md). 
+
+When utilizing or modifying this library, please include a copy of the MIT License and give appropriate credit to the original authors.
 
 ---
