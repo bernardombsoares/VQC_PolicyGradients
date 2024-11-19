@@ -74,7 +74,7 @@ We provide several configuration files in `configs/`. Users can also create cust
  ┣ 📜README.md             # Project documentation
  ┣ 📜main.py               # Entry point for training agents
  ┣ 📜notebook.ipynb        # Jupyter notebook for exploration
- ┗ 📜pyproject.toml        # Dependency management file
+ ┗ 📜requirements.txt      # Required libraries and versions
 ```
 
 ---
