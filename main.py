@@ -11,7 +11,8 @@ from vqcpg.agent.reinforce import ReinforceAgent
 @ray.remote
 def train_agents(script_module_name, agent_index, rundate):
     # Dynamically import the configuration script
-    script = __import__(script_module_name)
+
+    script = __import__(f"configs.{script_module_name}", fromlist=[''])
 
     # Set up the policy circuit
     policy_circuit = script.policy_circuit
@@ -52,7 +53,7 @@ def train_agents(script_module_name, agent_index, rundate):
     )
 
     # Train the agent
-    file_name = f"{script.file_name}_agent_{agent_index}"
+    file_name = f"agent_{agent_index}"
     reinforce_update.train(file_name, rundate, script.data_path, script.tensorboard)
     
     return f"Agent {agent_index} completed training with success status: {reinforce_update.solved}"
@@ -62,8 +63,10 @@ if __name__ == "__main__":
     ray.init()
 
     path_to_file = sys.argv[1]
-    sys.path.append(os.path.dirname(path_to_file))
-    import_name = os.path.basename(path_to_file)[:-3]
+    config_dir = os.path.abspath(os.path.dirname(path_to_file))
+    sys.path.append(config_dir)  # Add configs folder to the Python module search path
+    import_name = os.path.splitext(os.path.basename(path_to_file))[0]
+    full_path = os.path.join(config_dir, import_name + ".py")
 
     num_agents = int(sys.argv[2]) if len(sys.argv) > 2 else 1
 

@@ -9,7 +9,7 @@ import time
 import warnings
 from collections import deque
 
-from utils.utils import create_directory
+from vqcpg.utils.utils import create_directory
 
 
 class ReinforceAgent:

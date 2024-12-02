@@ -2,7 +2,7 @@ import numpy as np
 import pennylane as qml
 import torch
 import torch.nn as nn
-from utils.utils import get_function_representation
+from vqcpg.utils.utils import get_function_representation
 
 class JerbiModel(nn.Module):
     '''

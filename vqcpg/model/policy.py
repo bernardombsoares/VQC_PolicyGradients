@@ -1,7 +1,8 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from utils.utils import get_function_representation
+import torch.nn.functional as F
+from vqcpg.utils.utils import get_function_representation
 
 
 class PolicyPostProcessing(nn.Module):
