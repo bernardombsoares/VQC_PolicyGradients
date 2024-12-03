@@ -15,15 +15,15 @@ This package is designed to integrate quantum computing with reinforcement learn
 
 ### Features
 
-1. **Integrated Quantum Circuit Architectures**: Implements the circuits in [Jerbi et al. (2021)](https://arxiv.org/abs/2103.05577), [TensorFlow Quantum tutorial (Broughton et al., 2021)](https://www.tensorflow.org/quantum/tutorials), and [Universal Quantum Classifier (Pérez-Salinas et al., 2020)](https://arxiv.org/abs/1906.10594) adapted to RL.
-2. **Policy Options**: Different policy post-processing strategies, including the Born policies developed in [Jerbi et al. (2021)](https://arxiv.org/abs/2103.05577) and [Meyer et al. (2023)](https://arxiv.org/abs/2305.07919), as well as the Softmax policy, which can implement beta scheduling to adjust the agents' greediness.
+1. **Integrated Quantum Circuit Architectures**: Implements the circuits in [Jerbi et al. (2021)](https://arxiv.org/abs/2103.05577), [TensorFlow Quantum tutorial (Broughton et al., 2021)](https://www.tensorflow.org/quantum/tutorials/quantum_reinforcement_learning), and [Universal Quantum Classifier (Pérez-Salinas et al., 2020)](https://arxiv.org/abs/1906.10594) adapted to RL.
+2. **Policy Options**: Different policy post-processing strategies, including the Born policies developed in [Jerbi et al. (2021)](https://arxiv.org/abs/2103.05577) and [Meyer et al. (2023)](https://arxiv.org/abs/2212.06663), as well as the Softmax policy, which can implement beta scheduling to adjust the agents' greediness.
 3. **Extensible Configurations**: Big flexibility of parameters, allowing the use of input and output scaling, different entangling patterns, full liberty of the observables used, and more.
 4. **Parallel Execution**: Train multiple agents concurrently using CLI arguments.
 5. **Experimentation Framework**: Allows benchmark environments from OpenAI, such as **CartPole-v1** and **Acrobot-v1**.
 
 ### Technologies
 
-- **Core Programming Language**: [Python](https://www.python.org/)
+- **Core Programming Language**: [Python (Recommended Version: 3.11.0](https://www.python.org/)
 - **Machine Learning**: [PyTorch](https://pytorch.org/)
 - **Quantum Computing**: [PennyLane](https://pennylane.ai/)
 
@@ -33,8 +33,8 @@ This package is designed to integrate quantum computing with reinforcement learn
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/quantum-policy-gradients.git
-   cd quantum-policy-gradients
+   git clone https://github.com/yourusername/vqc_policygradients.git
+   cd vqc_policygradients
    ```
 2. Install dependencies:
    ```bash
