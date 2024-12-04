@@ -5,7 +5,7 @@ from functools import partial
 import os
 
 from vqcpg.model.vqc_designs import JerbiModel
-from vqcpg.model.vqc_observables import two_measure_expval
+from vqcpg.model.vqc_observables import three_measure_expval
 
 
 n_qubits = 4
@@ -19,7 +19,7 @@ entanglement_gate = qml.CZ
 input_scaling = True
 input_init = partial(torch.nn.init.normal_, mean=0.0, std=0.01)
 weight_init = lambda shape, dtype=torch.float: torch.FloatTensor(shape).normal_(-np.pi, np.pi)
-policy_circuit_measure = two_measure_expval
+policy_circuit_measure = three_measure_expval
 policy_circuit = JerbiModel(n_qubits, 
                             n_layers, 
                             device, 
@@ -34,7 +34,7 @@ policy_circuit = JerbiModel(n_qubits,
                             policy_circuit_measure)
 
 
-n_actions = 2
+n_actions = 3
 post_processing = 'softmax'
 beta_scheduling = False
 beta = 1
@@ -44,7 +44,7 @@ output_init = torch.nn.init.ones_
 
 policy_lr_list= [0.1, 0.01, 0.1]  # [input_weights, weights, output_weights]
 
-env_name = 'CartPole-v1'
+env_name = 'Acrobot-v1'
 n_episodes = 1000
 max_t = 500
 gamma = 0.98

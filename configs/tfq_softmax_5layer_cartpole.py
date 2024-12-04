@@ -4,7 +4,7 @@ import numpy as np
 from functools import partial
 import os
 
-from vqcpg.model.vqc_designs import JerbiModel
+from vqcpg.model.vqc_designs import TfqTutorial
 from vqcpg.model.vqc_observables import two_measure_expval
 
 
@@ -20,7 +20,7 @@ input_scaling = True
 input_init = partial(torch.nn.init.normal_, mean=0.0, std=0.01)
 weight_init = lambda shape, dtype=torch.float: torch.FloatTensor(shape).normal_(-np.pi, np.pi)
 policy_circuit_measure = two_measure_expval
-policy_circuit = JerbiModel(n_qubits, 
+policy_circuit = TfqTutorial(n_qubits, 
                             n_layers, 
                             device, 
                             shots, 
