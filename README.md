@@ -23,7 +23,7 @@ This package is designed to integrate quantum computing with reinforcement learn
 
 ### Technologies
 
-- **Core Programming Language**: [Python (Recommended Version: 3.11.0](https://www.python.org/)
+- **Core Programming Language**: [Python (Recommended Version: 3.11.0)](https://www.python.org/)
 - **Machine Learning**: [PyTorch](https://pytorch.org/)
 - **Quantum Computing**: [PennyLane](https://pennylane.ai/)
 
